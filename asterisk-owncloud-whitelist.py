@@ -124,13 +124,19 @@ except Exception as ex:
 
 try:
     data = lxml.etree.fromstring(response.text.encode('utf-8', 'ignore'))
-except lxml.etree.XMLSyntaxError as error:
-    pass
+except Exception as ex:
+    f.write("Error loading contacts\n")
+    f.write(str(ex))
     
 f.write("Loading contacts\n")
 
-contacts =  data.xpath('//*/card:address-data', namespaces = {"d":"DAV:", "card":"urn:ietf:params:xml:ns:carddav"})
+contacts = []
 
+try:
+
+    contacts =  data.xpath('//*/card:address-data', namespaces = {"d":"DAV:", "card":"urn:ietf:params:xml:ns:carddav"})
+except:
+    f.write('Cannot load contacts')
 
 contact_found = False
 
@@ -173,11 +179,13 @@ for contact_elem in contacts:
 
             
         
-if contact_found == True and black_found == True:
+if len(contacts) == 0:
+    print "SUCCESS\n"
+elif contact_found == True and black_found == True:
     print "ANSWER\n"
     print "EXEC WAIT \"4\"\n"
     print "EXEC PLAYBACK \"" + blacklist_sound + "\"\n"
-    print "EXEC WAIT \"4\"\n"
+    print "EXEC WAIT \"10\"\n"
     print "HANGUP\n"
 elif contact_found == False:
     print "ANSWER\n"
