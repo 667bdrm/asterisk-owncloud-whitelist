@@ -13,8 +13,8 @@ unwanted calls like marketing, loan collectors, prankers, etc.
 ~~~~
 exten => 1234,1,AGI(asterisk-owncloud-whitelist.py,"owncloud.example.com","/remote.php/carddav/addressbooks/myusername/default","myusername","mypass","blacklist_sounds_subdirectory","blacklist_category")
 ~~~~
-4. Restart Asterisk
-5. After testing Asterisk redirect incoming calls to extension. For example, some cell operators provide additional service to assign SIP accound to the MSISDN number
+5. Restart Asterisk
+6. After testing Asterisk redirect incoming calls to extension. For example, some cell operators provide additional service to assign SIP account to the MSISDN number
 
 
 ## Author and License
