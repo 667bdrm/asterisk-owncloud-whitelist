@@ -146,9 +146,11 @@ for contact_elem in contacts:
     
     vcard = vobject.readOne(contact_elem.text)
     
-    
-    name = vcard.contents.get('fn',[])[0].value
-    
+    try:
+        name = vcard.contents.get('fn',[])[0].value
+    except Exception as ex:
+        f.write("Failed to get contact name\n")
+        f.write(str(ex))
     
     for tel in vcard.contents.get('tel', []):
         raw_phone = tel.value
@@ -160,7 +162,9 @@ for contact_elem in contacts:
         # if metch tel:
         if pattern.search(env.get('agi_callerid')):
             contact_found = True
+            f.write("Found contact for %s\n" % phone)
             f.write("Contact: %s\n" % name)
+           
         
             cats_data =  vcard.contents.get('categories', [])
     
@@ -183,14 +187,25 @@ if len(contacts) == 0:
     print "SUCCESS\n"
 elif contact_found == True and black_found == True:
     print "ANSWER\n"
+    #print "EXEC PLAYBACK \"followme/sorry\"\n"
+    #print "EXEC WAIT \"3\"\n"
+    #print "EXEC PLAYBACK \"polkovnik/krasnogorsyi otdel\"\n"
+    #print "EXEC WAIT \"3\"\n"
+    #print "EXEC PLAYBACK \"polkovnik/vo mojete voenn yazokom\"\n"
+    #print "EXEC WAIT \"2\"\n"
+    #print "EXEC PLAYBACK \"polkovnik/ya polkovnik\"\n"
     print "EXEC WAIT \"4\"\n"
     print "EXEC PLAYBACK \"" + blacklist_sound + "\"\n"
     print "EXEC WAIT \"10\"\n"
     print "HANGUP\n"
 elif contact_found == False:
     print "ANSWER\n"
-    print "EXEC PLAYBACK \"followme/sorry\"\n"
+    #print "EXEC PLAYBACK \"noanswer-pl\"\n"
+    print "EXEC PLAYBACK \"ua-gsm-11\"\n"
+    #print "EXEC PLAYBACK \"" + blacklist_sound + "\"\n"
+    #print "EXEC PLAYBACK \"unavailable-gsm\"\n"
     print "HANGUP\n"
     f.write("Contact not found: %s\n" % env.get('agi_callerid'))
 
 f.close()
+
