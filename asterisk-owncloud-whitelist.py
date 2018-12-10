@@ -163,24 +163,28 @@ for contact_elem in contacts:
         if pattern.search(env.get('agi_callerid')):
             contact_found = True
             f.write("Found contact for %s\n" % phone)
-            f.write("Contact: %s\n" % name)
-           
-        
-            cats_data =  vcard.contents.get('categories', [])
-    
-            cats = []
-    
-            if len(cats_data) > 0:
-                cats = cats_data[0].value
-        
-            for cat in cats:
-        
-                if cat == blacklist_category:
-                    f.write("Blacklist found: %s %s\n" % (name, phone))
-                    f.write("Selected sound = " + blacklist_sound + "\n")
-                    black_found = True
-        
 
+            try:
+                f.write("Contact: %s\n" % name)
+           
+              
+                cats_data =  vcard.contents.get('categories', [])
+    
+                cats = []
+    
+                if len(cats_data) > 0:
+                    cats = cats_data[0].value
+        
+                for cat in cats:
+        
+                    if cat == blacklist_category:
+                        f.write("Blacklist found: %s %s\n" % (name, phone))
+                        f.write("Selected sound = " + blacklist_sound + "\n")
+                        black_found = True
+        
+            except Exception as ex:
+                f.write("Failed to get contact categories\n")
+                f.write(str(ex))
             
         
 if len(contacts) == 0:
@@ -201,7 +205,7 @@ elif contact_found == True and black_found == True:
 elif contact_found == False:
     print "ANSWER\n"
     #print "EXEC PLAYBACK \"noanswer-pl\"\n"
-    print "EXEC PLAYBACK \"ua-gsm-11\"\n"
+    print "EXEC PLAYBACK \"followme/sorry\"\n"
     #print "EXEC PLAYBACK \"" + blacklist_sound + "\"\n"
     #print "EXEC PLAYBACK \"unavailable-gsm\"\n"
     print "HANGUP\n"
