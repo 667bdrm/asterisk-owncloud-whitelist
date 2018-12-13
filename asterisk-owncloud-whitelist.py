@@ -147,7 +147,7 @@ for contact_elem in contacts:
     vcard = vobject.readOne(contact_elem.text)
     
     try:
-        name = vcard.contents.get('fn',[])[0].value
+        name = vcard.contents.get('fn',[])[0].value.encode('utf-8')
     except Exception as ex:
         f.write("Failed to get contact name\n")
         f.write(str(ex))
@@ -204,10 +204,8 @@ elif contact_found == True and black_found == True:
     print "HANGUP\n"
 elif contact_found == False:
     print "ANSWER\n"
-    #print "EXEC PLAYBACK \"noanswer-pl\"\n"
     print "EXEC PLAYBACK \"followme/sorry\"\n"
     #print "EXEC PLAYBACK \"" + blacklist_sound + "\"\n"
-    #print "EXEC PLAYBACK \"unavailable-gsm\"\n"
     print "HANGUP\n"
     f.write("Contact not found: %s\n" % env.get('agi_callerid'))
 
