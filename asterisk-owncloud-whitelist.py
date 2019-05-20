@@ -188,7 +188,7 @@ for contact_elem in contacts:
             
         
 if len(contacts) == 0:
-    print "SUCCESS\n"
+    print "NOOP\n"
 elif contact_found == True and black_found == True:
     print "ANSWER\n"
     #print "EXEC PLAYBACK \"followme/sorry\"\n"
