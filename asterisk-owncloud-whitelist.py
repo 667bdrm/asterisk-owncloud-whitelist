@@ -102,6 +102,13 @@ blacklist_sounds = recursive_glob(sounds_path + '/' + blacklist_sounds_path, '*.
 
 random_max = 0
 
+callerid = env.get('agi_callerid')
+
+if callerid == None:
+    callerid = "+000000000000"
+callerid = callerid.replace("+", "").replace(" ", "").replace("-", "")
+
+
 if len(blacklist_sounds) > 1:
     random_max = len(blacklist_sounds) - 1
 
@@ -146,9 +153,11 @@ for contact_elem in contacts:
     
     vcard = vobject.readOne(contact_elem.text)
     
-    
-    name = vcard.contents.get('fn',[])[0].value
-    
+    try:
+        name = vcard.contents.get('fn',[])[0].value.encode('utf-8')
+    except Exception as ex:
+        f.write("Failed to get contact name\n")
+        f.write(str(ex))
     
     for tel in vcard.contents.get('tel', []):
         raw_phone = tel.value
@@ -158,30 +167,35 @@ for contact_elem in contacts:
         pattern = re.compile("^" + phone + '$')
         
         # if metch tel:
-        if pattern.search(env.get('agi_callerid')):
+        if pattern.search(callerid):
             contact_found = True
-            f.write("Contact: %s\n" % name)
-        
-            cats_data =  vcard.contents.get('categories', [])
-    
-            cats = []
-    
-            if len(cats_data) > 0:
-                cats = cats_data[0].value
-        
-            for cat in cats:
-        
-                if cat == blacklist_category:
-                    f.write("Blacklist found: %s %s\n" % (name, phone))
-                    f.write("Selected sound = " + blacklist_sound + "\n")
-                    black_found = True
-        
+            f.write("Found contact for %s\n" % phone)
 
-            
+            try:
+                f.write("Contact: %s\n" % name)
+           
+              
+                cats_data =  vcard.contents.get('categories', [])
+    
+                cats = []
+    
+                if len(cats_data) > 0:
+                    cats = cats_data[0].value
         
+                for cat in cats:
+        
+                    if cat == blacklist_category:
+                        f.write("Blacklist found: %s %s\n" % (name, phone))
+                        f.write("Selected sound = " + blacklist_sound + "\n")
+                        black_found = True
+        
+            except Exception as ex:
+                f.write("Failed to get contact categories\n")
+                f.write(str(ex))
+            
 if len(contacts) == 0:
-    print "SUCCESS\n"
-elif contact_found == True and black_found == True:
+    print "NOOP\n"
+elif (contact_found == True and black_found == True) or (env.get('agi_calleridname') == 'collector'):
     print "ANSWER\n"
     print "EXEC WAIT \"4\"\n"
     print "EXEC PLAYBACK \"" + blacklist_sound + "\"\n"
