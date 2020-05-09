@@ -47,14 +47,14 @@ while 1:
    if line == '':
       break
    key,data = line.split(':')
-   if key[:4] <> 'agi_':
+   if key[:4] != 'agi_':
       #skip input that doesn't begin with agi_
       sys.stderr.write("Did not work!\n");
       sys.stderr.flush()
       continue
    key = key.strip()
    data = data.strip()
-   if key <> '':
+   if key != '':
       env[key] = data
 
 sys.stderr.write("AGI Environment Dump:\n");
