@@ -211,7 +211,7 @@ elif (contact_found == True and black_found == True) or (env.get('agi_calleridna
 elif contact_found == False:
     print("ANSWER\n")
     print("SET VARIABLE NO_CONTACT \"1\"\n")
-    print "EXEC PLAYBACK \"unavailable-gsm\"\n"
+    print "EXEC PLAYBACK \"followme/sorry\"\n"
     print("HANGUP\n")
     df.write("Contact not found: %s\n" % env.get('agi_callerid'))
 
