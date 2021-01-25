@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 """
@@ -177,7 +177,7 @@ for contact_elem in contacts:
             f.write("Found contact for %s\n" % phone)
 
             try:
-                f.write("Contact: %s\n" % name)
+                f.write("Contact: %s\n" % name.decode('utf-8'))
                 caller_name = name
               
                 cats_data =  vcard.contents.get('categories', [])
@@ -211,7 +211,7 @@ elif (contact_found == True and black_found == True) or (env.get('agi_calleridna
 elif contact_found == False:
     print("ANSWER\n")
     print("SET VARIABLE NO_CONTACT \"1\"\n")
-    print "EXEC PLAYBACK \"followme/sorry\"\n"
+    print("EXEC PLAYBACK \"followme/sorry\"\n")
     print("HANGUP\n")
     df.write("Contact not found: %s\n" % env.get('agi_callerid'))
 
